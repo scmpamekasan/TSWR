@@ -70,7 +70,7 @@ if points:
             filled=True,
             get_fill_color=[255, 255, 100, 60],  # Kuning semi-transparan
             get_line_color=[180, 0, 0],
-            line_width_min_pixels=2,
+            line_width_min_pixels=1,
             pickable=True
         )
 
@@ -117,7 +117,7 @@ if points:
             "boxShadow": "0 4px 12px rgba(0,0,0,0.25)",
             "fontFamily": "Arial, sans-serif",
             "fontSize": "14px",
-            "lineHeight": "1.4"
+            "lineHeight": "0.5"
         }
     },
     map_style=None  # atau 'light' jika ingin lebih terang
