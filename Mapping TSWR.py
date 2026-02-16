@@ -79,4 +79,4 @@ if points:
 else:
     st.info("Belum ada koordinat yang valid. Masukkan di atas.")
 
-map_bangkalankota = json.load(open(Bangkalan_BangkalanKota.geojson','r'))
+map_bangkalankota = json.load(open(Bangkalan_BangkalanKota.geojson))
