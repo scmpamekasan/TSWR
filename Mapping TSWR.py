@@ -5,6 +5,17 @@
 
 import streamlit as st
 import pandas as pd
+import requests
+
+# Load GeoJSON real dari GitHub (ringan & akurat)
+surabaya_url = "https://raw.githubusercontent.com/okzapradhana/indonesia-city-geojson/master/kota/kota_surabaya.geojson"
+try:
+    geojson_surabaya = requests.get(surabaya_url).json()
+except:
+    st.warning("Gagal load GeoJSON Surabaya, gunakan fallback simplified.")
+    geojson_surabaya = { ... }  # fallback bounding box seperti sebelumnya
+
+
 
 st.title("Peta Titik Koordinat di Mapbox via Streamlit")
 
