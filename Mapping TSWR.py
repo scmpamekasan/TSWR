@@ -81,7 +81,7 @@ if points:
             get_position=["lon", "lat"],
             get_radius=500,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
             get_fill_color=[59, 130, 246, 240],   # Biru full opacity
-            get_line_color=[0, 0, 0, 255],       # garis hitam tebal
+            get_line_color=[204, 153, 0, 200],       # Kuning agak gelap
             line_width_min_pixels=2,
             radius_min_pixels=1,                 # minimal 8 pixel agar tak hilang saat zoom out
             radius_max_pixels=2,                # batas max saat zoom in
