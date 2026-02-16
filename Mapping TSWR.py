@@ -13,20 +13,6 @@ Contoh:
 112.7368, -7.2575
 """)
 
-# Layer 2: Titik koordinat (radius DINAikkan agar langsung kelihatan)
-points_layer = pdk.Layer(
-    "ScatterplotLayer",
-    data=df,
-    get_position=["lon", "lat"],
-    get_radius=100,                      # ← naikkan ke 100–300 meter dulu untuk tes (nanti bisa kecilkan lagi)
-    get_fill_color=[255, 140, 0, 255],   # ← opacity full (255) biar lebih kontras
-    get_line_color=[0, 0, 0, 255],       # garis hitam tegas
-    line_width_min_pixels=2,             # garis lebih tebal
-    radius_min_pixels=5,                 # ← minimal ukuran di pixel (penting agar tidak hilang saat zoom out)
-    radius_max_pixels=50,                # batas max supaya tidak terlalu besar saat zoom in
-    pickable=True
-)
-
 raw_input = st.text_area(
     "Koordinat (lng, lat)",
     height=150,
