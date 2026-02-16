@@ -5,6 +5,7 @@
 
 import streamlit as st
 import pandas as pd
+import json
 # app.py
 
 st.title("Peta Titik Koordinat di Mapbox via Streamlit")
@@ -77,3 +78,5 @@ if points:
     st.json(geojson)
 else:
     st.info("Belum ada koordinat yang valid. Masukkan di atas.")
+
+map_bangkalankota = json.load(open('/Users/ekasulawestara/Desktop/Dashboard_PMK_2022/st-multi_app/Map/Bangkalan_BangkalanKota.geojson','r'))
