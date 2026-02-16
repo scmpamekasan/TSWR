@@ -61,6 +61,8 @@ if points:
         tooltip={"text": "Lon: {lon}, Lat: {lat}"}
     )
 
-    st.pydeck_chart(deck, use_container_width=True, height=600)    st.json(geojson)
+    st.pydeck_chart(deck, use_container_width=True, height=600)    
+    
+    st.json(geojson)
 else:
     st.info("Belum ada koordinat yang valid. Masukkan di atas.")
