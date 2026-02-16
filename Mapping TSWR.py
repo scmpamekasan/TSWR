@@ -111,7 +111,7 @@ if points:
         "html": """
         <div style="min-width: 160px;">
             <b>Kecamatan</b><br>
-            {properties.nm_kecamatan}
+            {code}
         </div>
         """,
         "style": {
