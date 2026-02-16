@@ -79,7 +79,7 @@ if points:
             "ScatterplotLayer",
             data=df,
             get_position=["lon", "lat"],
-            get_radius=200,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
+            get_radius=25,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
             get_fill_color=[255, 87, 51, 255],   # oranye full opacity
             get_line_color=[0, 0, 0, 255],       # garis hitam tebal
             line_width_min_pixels=2,
