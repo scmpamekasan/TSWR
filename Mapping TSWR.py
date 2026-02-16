@@ -65,10 +65,10 @@ if points:
         boundary_layer = pdk.Layer(
             "GeoJsonLayer",
             data=batas_geojson,
-            opacity=0.35,                     # transparan agar titik kelihatan
+            opacity=0.15,                     # transparan agar titik kelihatan
             stroked=True,
             filled=True,
-            get_fill_color=[220, 53, 69, 120],  # merah muda semi-transparan
+            get_fill_color=[255, 255, 100, 60],  # Kuning semi-transparan
             get_line_color=[180, 0, 0],
             line_width_min_pixels=2,
             pickable=True
@@ -80,7 +80,7 @@ if points:
             data=df,
             get_position=["lon", "lat"],
             get_radius=500,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
-            get_fill_color=[255, 87, 51, 255],   # oranye full opacity
+            get_fill_color=[59, 130, 246, 240],   # Biru full opacity
             get_line_color=[0, 0, 0, 255],       # garis hitam tebal
             line_width_min_pixels=2,
             radius_min_pixels=1,                 # minimal 8 pixel agar tak hilang saat zoom out
