@@ -79,12 +79,12 @@ if points:
             "ScatterplotLayer",
             data=df,
             get_position=["lon", "lat"],
-            get_radius=5,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
+            get_radius=500,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
             get_fill_color=[255, 87, 51, 255],   # oranye full opacity
             get_line_color=[0, 0, 0, 255],       # garis hitam tebal
             line_width_min_pixels=2,
-            radius_min_pixels=6,                 # minimal 8 pixel agar tak hilang saat zoom out
-            radius_max_pixels=10,                # batas max saat zoom in
+            radius_min_pixels=4,                 # minimal 8 pixel agar tak hilang saat zoom out
+            radius_max_pixels=4,                # batas max saat zoom in
             pickable=True
         )
 
