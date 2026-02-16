@@ -84,7 +84,7 @@ if points:
             get_line_color=[0, 0, 0, 255],       # garis hitam tebal
             line_width_min_pixels=2,
             radius_min_pixels=6,                 # minimal 8 pixel agar tak hilang saat zoom out
-            radius_max_pixels=20,                # batas max saat zoom in
+            radius_max_pixels=10,                # batas max saat zoom in
             pickable=True
         )
 
