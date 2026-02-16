@@ -6,6 +6,8 @@
 import streamlit as st
 import pandas as pd
 import json
+import pydeck as pdk
+
 # app.py
 
 st.title("Peta Titik Koordinat di Mapbox via Streamlit")
