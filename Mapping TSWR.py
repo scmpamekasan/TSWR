@@ -1,84 +1,65 @@
-# app.py (versi advanced)
+# app.py
 import streamlit as st
 import pandas as pd
-import pydeck as pdk
 
-st.title("Peta Multiple Titik Koordinat – Mapbox + PyDeck")
+st.title("Peta Titik Koordinat di Mapbox via Streamlit")
 
-# Masukkan Mapbox token (penting untuk style bagus)
-MAPBOX_TOKEN = st.text_input(
-    "Mapbox Access Token (opsional, tapi direkomendasikan)",
-    value="pk.eyJ1Ijoi...ganti_dengan_token_kamu...",
-    type="password"
-)
+st.markdown("""
+Masukkan daftar koordinat (longitude, latitude) di bawah ini.  
+Format: satu baris per titik, dipisah koma atau spasi.  
+Contoh:  
+112.7368, -7.2575  
+112.7680, -7.2650  
+""")
 
-# Input koordinat sama seperti versi 1
-raw_input = st.text_area(
-    "Koordinat (lng, lat) – satu per baris",
-    height=180,
-    value="""112.7368, -7.2575, Titik A
-112.7680, -7.2650, Titik B
-112.7200, -7.2900, Titik C
-112.7500, -7.2500, Titik D"""
-)
+# Input teks multi-line
+raw_input = st.text_area("Masukkan koordinat (lng, lat)", height=150, value="""112.7368, -7.2575
+112.7680, -7.2650
+112.7200, -7.2900
+112.7500, -7.2500""")
 
+# Parsing input menjadi list of [lng, lat]
 points = []
-for i, line in enumerate(raw_input.strip().split("\n")):
+for line in raw_input.strip().split("\n"):
     line = line.strip()
-    if not line: continue
+    if not line:
+        continue
     try:
-        parts = [x.strip() for x in line.replace(";", ",").split(",")]
-        lng = float(parts[0])
-        lat = float(parts[1])
-        name = parts[2] if len(parts) > 2 else f"Titik {i+1}"
-        points.append({"lng": lng, "lat": lat, "name": name})
+        parts = [float(x.strip()) for x in line.replace(";", ",").split(",") if x.strip()]
+        if len(parts) >= 2:
+            lng, lat = parts[0], parts[1]
+            points.append({"lon": lng, "lat": lat})
     except:
-        pass
+        st.warning(f"Baris salah format → dilewati: {line}")
 
 if points:
     df = pd.DataFrame(points)
 
-    # Layer titik (Scatterplot)
-    layer = pdk.Layer(
-        "ScatterplotLayer",
+    st.subheader("Peta Titik Koordinat")
+    st.map(
         df,
-        get_position=["lng", "lat"],
-        get_color=[255, 140, 0, 180],  # oranye semi-transparan
-        get_radius=120,               # ukuran titik (meter)
-        pickable=True,
+        latitude="lat",
+        longitude="lon",
+        zoom=10,                # sesuaikan zoom awal
+        use_container_width=True,
+        height=600
     )
 
-    # Tooltip
-    tooltip = {
-        "html": "<b>{name}</b><br>Lng: {lng}<br>Lat: {lat}",
-        "style": {"background": "grey", "color": "white", "font-family": "Arial"}
+    st.subheader("Data Koordinat")
+    st.dataframe(df)
+
+    # Opsional: tampilkan juga dalam format GeoJSON sederhana
+    geojson = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [row.lon, row.lat]},
+                "properties": {"id": i+1}
+            }
+            for i, row in df.iterrows()
+        ]
     }
-
-    # View awal (bisa dihitung otomatis dari data)
-    if not df.empty:
-        center_lon = df["lng"].mean()
-        center_lat = df["lat"].mean()
-    else:
-        center_lon, center_lat = 112.75, -7.25
-
-    view_state = pdk.ViewState(
-        latitude=center_lat,
-        longitude=center_lon,
-        zoom=10,
-        pitch=0
-    )
-
-    # Deck dengan Mapbox
-    deck = pdk.Deck(
-        map_style="mapbox://styles/mapbox/streets-v12" if MAPBOX_TOKEN else None,
-        api_keys={"mapbox": MAPBOX_TOKEN} if MAPBOX_TOKEN else None,
-        initial_view_state=view_state,
-        layers=[layer],
-        tooltip=tooltip
-    )
-
-    st.pydeck_chart(deck, use_container_width=True, height=650)
-
-    st.dataframe(df[["name", "lng", "lat"]])
+    st.json(geojson)
 else:
-    st.info("Masukkan koordinat di atas (contoh: 112.75, -7.25, Nama Titik)")
+    st.info("Belum ada koordinat yang valid. Masukkan di atas.")
