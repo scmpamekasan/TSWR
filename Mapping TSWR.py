@@ -2,29 +2,7 @@
 # Dengan ukuran titik diperkecil (radius 15 meter)
 # Jalankan dengan: streamlit run app.py
 # Upload ke GitHub: Buat repo, tambah app.py + requirements.txt
-from decimal import ROUND_UP, Rounded
-from pickle import FALSE
-import pandas as pd  # pip install pandas openpyxl
-import plotly.express as px  # pip install plotly-express
-import streamlit as st  # pip install streamlit
-import matplotlib.pyplot as plt
-import plotly.figure_factory as ff
-import streamlit.components.v1 as components
-import numpy as np
-import altair as alt
-from PIL import Image
-import pydeck as pdk
-import plotly.graph_objects as go
-import xlsxwriter
-import os
-import json
-from matplotlib.patches import ConnectionPatch
-from streamlit_option_menu import option_menu
-from streamlit_echarts import st_echarts
-from pyecharts import options as opts
-from pyecharts.charts import Bar
-from streamlit_echarts import st_pyecharts
-#####
+
 import streamlit as st
 import pandas as pd
 import json
