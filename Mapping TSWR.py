@@ -37,6 +37,8 @@ for line in raw_input.strip().split("\n"):
 
 if points:
     df = pd.DataFrame(points)
+    df['lon'] = df['lon'].astype(float)  # Pastikan tipe data float
+    df['lat'] = df['lat'].astype(float)
 
     # ────────────────────────────────────────────────
     # Load batas wilayah Bangkalan Kota dari GeoJSON
@@ -48,6 +50,16 @@ if points:
             batas_geojson = json.load(f)
 
         st.success("Batas wilayah Bangkalan berhasil dimuat!")
+
+        # Debug: Tampilkan info data
+        st.write("Jumlah titik:", len(df))
+        if not df.empty:
+            st.write("Contoh titik pertama:", df.iloc[0].to_dict())
+            st.write("Rata-rata lokasi (untuk cek apakah di Bangkalan):")
+            st.write(f"Lat rata-rata: {df['lat'].mean():.4f}")
+            st.write(f"Lon rata-rata: {df['lon'].mean():.4f}")
+        else:
+            st.warning("DataFrame kosong – parsing gagal?")
 
         # Layer 1: Batas wilayah (polygon / MultiPolygon)
         boundary_layer = pdk.Layer(
@@ -62,23 +74,32 @@ if points:
             pickable=True
         )
 
-        # Layer 2: Titik koordinat (radius 15 meter)
+        # Layer 2: Titik koordinat (diperbesar untuk visibilitas)
         points_layer = pdk.Layer(
             "ScatterplotLayer",
             data=df,
             get_position=["lon", "lat"],
-            get_radius=15,                    # dalam meter
-            get_fill_color=[255, 87, 51, 220],  # oranye semi-transparan
-            get_line_color=[0, 0, 0, 150],
-            line_width_min_pixels=1,
+            get_radius=200,                      # dalam meter (naikkan ini kalau masih tak kelihatan, misal 500)
+            get_fill_color=[255, 87, 51, 255],   # oranye full opacity
+            get_line_color=[0, 0, 0, 255],       # garis hitam tebal
+            line_width_min_pixels=2,
+            radius_min_pixels=8,                 # minimal 8 pixel agar tak hilang saat zoom out
+            radius_max_pixels=60,                # batas max saat zoom in
             pickable=True
         )
 
-        # View state (pusat Bangkalan)
+        # View state (pusat otomatis berdasarkan titik input kalau ada)
+        if not df.empty:
+            center_lat = df['lat'].mean()
+            center_lon = df['lon'].mean()
+        else:
+            center_lat = -7.03
+            center_lon = 112.75
+
         view_state = pdk.ViewState(
-            latitude=-7.03,
-            longitude=112.75,
-            zoom=11,
+            latitude=center_lat,
+            longitude=center_lon,
+            zoom=12,  # Naikkan zoom agar titik lebih kelihatan
             pitch=0
         )
 
@@ -86,10 +107,8 @@ if points:
         deck = pdk.Deck(
             layers=[boundary_layer, points_layer],  # batas di bawah, titik di atas
             initial_view_state=view_state,
-            tooltip={"text": "Titik ID: {id}"},     # opsional, bisa ditambah properties lain
-            map_style=None                          # default Carto (tidak butuh token)
-            # Jika ingin Mapbox style: map_style="mapbox://styles/mapbox/light-v10"
-            # lalu tambah api_keys={"mapbox": st.secrets["MAPBOX_TOKEN"]}
+            tooltip={"text": "Titik ID: {id}"},     # opsional
+            map_style=None                          # default Carto
         )
 
         st.subheader("Peta Titik + Batas Wilayah")
