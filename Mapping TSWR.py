@@ -108,12 +108,7 @@ if points:
     layers=[boundary_layer, points_layer],
     initial_view_state=view_state,
     tooltip={
-        "html": """
-        <div style="min-width: 160px;">
-            <b>Kecamatan</b><br>
-            {code}
-        </div>
-        """,
+        "html": "<b>Kecamatan:</b> {nm_kecamatan}",
         "style": {
             "background": "rgba(255, 255, 255, 0.96)",
             "color": "#111",
