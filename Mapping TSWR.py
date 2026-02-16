@@ -1,6 +1,7 @@
 # app.py
 import streamlit as st
 import pandas as pd
+import pydeck as pdk
 
 st.title("Peta Titik Koordinat di Mapbox via Streamlit")
 
@@ -35,31 +36,31 @@ for line in raw_input.strip().split("\n"):
 if points:
     df = pd.DataFrame(points)
 
-    st.subheader("Peta Titik Koordinat")
-    st.map(
+    layer = pdk.Layer(
+        'ScatterplotLayer',
         df,
-        latitude="lat",
-        longitude="lon",
-        zoom=10,                # sesuaikan zoom awal
-        use_container_width=True,
-        height=600
+        get_position=['lon', 'lat'],
+        get_radius=10,             # radius dalam meter (sangat kecil)
+        radius_min_pixels=3,       # minimal 3 pixel (agar tetap kelihatan zoom out)
+        radius_max_pixels=8,       # maksimal 8 pixel (agar tidak besar saat zoom in)
+        get_fill_color=[255, 140, 0, 200],  # oranye semi-transparan
+        pickable=True
     )
 
-    st.subheader("Data Koordinat")
-    st.dataframe(df)
+    view_state = pdk.ViewState(
+        latitude=df['lat'].mean(),
+        longitude=df['lon'].mean(),
+        zoom=11,
+        pitch=0
+    )
 
-    # Opsional: tampilkan juga dalam format GeoJSON sederhana
-    geojson = {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "geometry": {"type": "Point", "coordinates": [row.lon, row.lat]},
-                "properties": {"id": i+1}
-            }
-            for i, row in df.iterrows()
-        ]
-    }
-    st.json(geojson)
+    deck = pdk.Deck(
+        map_style='mapbox://styles/mapbox/streets-v12',
+        initial_view_state=view_state,
+        layers=[layer],
+        tooltip={"text": "Lon: {lon}, Lat: {lat}"}
+    )
+
+    st.pydeck_chart(deck, use_container_width=True, height=600)    st.json(geojson)
 else:
     st.info("Belum ada koordinat yang valid. Masukkan di atas.")
