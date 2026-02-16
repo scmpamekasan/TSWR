@@ -105,12 +105,28 @@ if points:
 
         # Gabungkan layers
         deck = pdk.Deck(
-            layers=[boundary_layer, points_layer],  # batas di bawah, titik di atas
-            initial_view_state=view_state,
-            tooltip={"text": "nm_kecamatan"},     # opsional
-            map_style=None                          # default Carto
-        )
-
+    layers=[boundary_layer, points_layer],
+    initial_view_state=view_state,
+    tooltip={
+        "html": """
+        <div style="min-width: 160px;">
+            <b>Kecamatan</b><br>
+            {properties.nm_kecamatan}
+        </div>
+        """,
+        "style": {
+            "background": "rgba(255, 255, 255, 0.96)",
+            "color": "#111",
+            "padding": "10px",
+            "borderRadius": "6px",
+            "boxShadow": "0 4px 12px rgba(0,0,0,0.25)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": "14px",
+            "lineHeight": "1.4"
+        }
+    },
+    map_style=None  # atau 'light' jika ingin lebih terang
+)
         st.subheader("Peta Titik + Batas Wilayah")
         st.pydeck_chart(deck, use_container_width=True, height=650)
 
