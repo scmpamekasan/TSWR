@@ -107,7 +107,7 @@ if points:
         deck = pdk.Deck(
             layers=[boundary_layer, points_layer],  # batas di bawah, titik di atas
             initial_view_state=view_state,
-            tooltip={"text": "Titik ID: {id}"},     # opsional
+            tooltip={"text": "nm_kecamatan"},     # opsional
             map_style=None                          # default Carto
         )
 
