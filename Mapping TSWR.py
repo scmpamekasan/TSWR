@@ -4,7 +4,7 @@ import json
 import pydeck as pdk
 import os
 
-st.title("Peta Titik Koordinat + Batas Wilayah Bangkalan Kota")
+st.title("Peta Titik Koordinat + Batas Wilayah Gresik")
 
 st.markdown("""
 Masukkan daftar koordinat (longitude, latitude) satu per baris.  
@@ -41,21 +41,21 @@ if points:
     df['lat'] = df['lat'].astype(float)
 
     # ────────────────────────────────────────────────
-    # Load batas wilayah Bangkalan Kota dari GeoJSON
+    # Load batas wilayah Gresik dari GeoJSON
     # ────────────────────────────────────────────────
-    geojson_path = os.path.join("Map", "Bangkalan_BangkalanKota.geojson")
+    geojson_path = os.path.join("Map", "Kabupaten_Gresik.geojson")
 
     try:
         with open(geojson_path, 'r', encoding='utf-8') as f:
             batas_geojson = json.load(f)
 
-        st.success("Batas wilayah Bangkalan berhasil dimuat!")
+        st.success("Batas wilayah Kabupaten Gresik berhasil dimuat!")
 
         # Debug: Tampilkan info data
         st.write("Jumlah titik:", len(df))
         if not df.empty:
             st.write("Contoh titik pertama:", df.iloc[0].to_dict())
-            st.write("Rata-rata lokasi (untuk cek apakah di Bangkalan):")
+            st.write("Rata-rata lokasi (untuk cek apakah di Kabupaten Gresik):")
             st.write(f"Lat rata-rata: {df['lat'].mean():.4f}")
             st.write(f"Lon rata-rata: {df['lon'].mean():.4f}")
         else:
