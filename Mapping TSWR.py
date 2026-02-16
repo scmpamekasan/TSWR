@@ -1,7 +1,10 @@
-# app.py
+# app.py - Streamlit App untuk Menampilkan Multiple Titik Koordinat di Mapbox
+# Dengan ukuran titik diperkecil (radius 15 meter)
+# Jalankan dengan: streamlit run app.py
+# Upload ke GitHub: Buat repo, tambah app.py + requirements.txt
+
 import streamlit as st
 import pandas as pd
-import pydeck as pdk
 
 st.title("Peta Titik Koordinat di Mapbox via Streamlit")
 
@@ -14,12 +17,16 @@ Contoh:
 """)
 
 # Input teks multi-line
-raw_input = st.text_area("Masukkan koordinat (lng, lat)", height=150, value="""112.7368, -7.2575
+raw_input = st.text_area(
+    "Masukkan koordinat (lng, lat)", 
+    height=150, 
+    value="""112.7368, -7.2575
 112.7680, -7.2650
 112.7200, -7.2900
-112.7500, -7.2500""")
+112.7500, -7.2500"""
+)
 
-# Parsing input menjadi list of [lng, lat]
+# Parsing input menjadi list of [lon, lat]
 points = []
 for line in raw_input.strip().split("\n"):
     line = line.strip()
@@ -36,31 +43,36 @@ for line in raw_input.strip().split("\n"):
 if points:
     df = pd.DataFrame(points)
 
-    layer = pdk.Layer(
-        'ScatterplotLayer',
+    st.subheader("Peta Titik Koordinat (Ukuran Titik Diperkecil)")
+
+    # Ukuran titik kecil: 15 meter (bisa dicoba 10 atau 20 jika masih kurang/kelihatan)
+    # Warna bisa diganti juga, misal "#FF4500" untuk oranye
+    st.map(
         df,
-        get_position=['lon', 'lat'],
-        get_radius=10,             # radius dalam meter (sangat kecil)
-        radius_min_pixels=3,       # minimal 3 pixel (agar tetap kelihatan zoom out)
-        radius_max_pixels=8,       # maksimal 8 pixel (agar tidak besar saat zoom in)
-        get_fill_color=[255, 140, 0, 200],  # oranye semi-transparan
-        pickable=True
+        latitude="lat",
+        longitude="lon",
+        size=15,                # ← Ukuran radius dalam meter (kecil: 10–20)
+        zoom=11,                # Zoom lebih dekat agar titik kecil tetap kelihatan
+        color="#FF5733",        # Warna oranye (opsional)
+        use_container_width=True,
+        height=600
     )
 
-    view_state = pdk.ViewState(
-        latitude=df['lat'].mean(),
-        longitude=df['lon'].mean(),
-        zoom=11,
-        pitch=0
-    )
+    st.subheader("Data Koordinat")
+    st.dataframe(df)
 
-    deck = pdk.Deck(
-        map_style='mapbox://styles/mapbox/streets-v12',
-        initial_view_state=view_state,
-        layers=[layer],
-        tooltip={"text": "Lon: {lon}, Lat: {lat}"}
-    )
-
-    st.pydeck_chart(deck, use_container_width=True, height=600)    
-    
-    
+    # Opsional: tampilkan juga dalam format GeoJSON sederhana
+    geojson = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [row.lon, row.lat]},
+                "properties": {"id": i+1}
+            }
+            for i, row in df.iterrows()
+        ]
+    }
+    st.json(geojson)
+else:
+    st.info("Belum ada koordinat yang valid. Masukkan di atas.")
